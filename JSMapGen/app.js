@@ -1,9 +1,4 @@
-﻿function ifundef(value, def) {
-    return typeof(value) === 'undefined' ? def : value;
-}
-
-function makeRandArray(width, height, thresh) {
-    thresh = ifundef(thresh, 0.5);
+﻿function makeRandArray(width, height, thresh=0.5) {
     var array = new Array(width);
 
     for (var i = 0; i < width; i++) {
@@ -16,12 +11,7 @@ function makeRandArray(width, height, thresh) {
     return array;
 }
 
-function over2D(array, func, sub_width, sub_height, pad_size, pad_value) {
-    sub_width = ifundef(sub_width, 3);
-    sub_height = ifundef(sub_height, 3);
-    pad_size = ifundef(pad_size, 0);
-    pad_value = ifundef(pad_value, 0);
-
+function over2D(array, func, sub_width=3, sub_height=3, pad_size=1, pad_value=0) {
     for (var i = 0; i < array.length; i++) {
     }
 
@@ -67,7 +57,7 @@ function over2D(array, func, sub_width, sub_height, pad_size, pad_value) {
 
 function print2D(array) {
     array.forEach(function (curr) {
-        curr.forEach(function (curr) { process.stdout.write(String(curr)) })
+        curr.forEach( function (curr) { process.stdout.write(curr.toString(16)) })
         process.stdout.write("\n");
     });
 }
@@ -78,6 +68,22 @@ function sum2D(array) {
     return array.reduce(function (prev, cur) { return prev + sum(cur) }, 0)
 }
 
+/**
+ * Tile map:
+ * A - B
+ * |   |
+ * D - C
+ *
+ * bits -> id
+ * 3210 -> DCBA
+ * Assumes input map is only 1's and 0's.
+ * @param arr 2x2 array of verticies, 1's are wall, 0's are empty.
+ */
+function toTile(arr) {
+    return (arr[0][0] | (arr[0][1] << 1) | (arr[1][1] << 2) | (arr[1][0] << 3));
+}
+
+// Examples.
 array = makeRandArray(50, 50, 0.3);
 print2D(array);
 console.log("");
@@ -91,5 +97,9 @@ print2D(processed);
 console.log("");
 
 processed = over2D(processed, function (arr) { return sum2D(arr) > 4 ? 1 : 0 }, 3, 3, 1, 1)
+print2D(processed);
+console.log("");
+
+processed = over2D(processed, toTile, 2, 2, 0)
 print2D(processed);
 console.log("");
