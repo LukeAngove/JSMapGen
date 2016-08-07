@@ -1,0 +1,9 @@
+{
+  "name": "jsmap-gen",
+  "version": "0.0.0",
+  "description": "JSMapGen",
+  "main": "app.js",
+  "author": {
+    "name": "P150EM"
+  }
+}
